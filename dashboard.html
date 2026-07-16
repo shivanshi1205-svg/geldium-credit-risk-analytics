@@ -12,26 +12,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+        /* Define standard variables on root */
         :root {
+            /* Active Theme Colors (Changed by JS) */
             --bg-primary: #080D1A;
             --bg-secondary: #0E1626;
             --bg-tertiary: #152238;
-            --bg-glass: rgba(14, 22, 38, 0.85);
-            --color-primary: #1B365D;
-            --color-navy-glow: rgba(27, 54, 93, 0.4);
-            --color-grey: #8E9AAF;
+            --color-border: #1F2E4A;
             --color-text-white: #F0F4F8;
+            --color-grey: #8E9AAF;
             --color-gold: #FFB703;
-            --color-gold-dark: #D99B00;
             --color-gold-glow: rgba(255, 183, 3, 0.15);
+            
+            /* Status / Semantic Colors */
             --color-green: #38EF7D;
             --color-green-glow: rgba(56, 239, 125, 0.15);
             --color-red: #FF416C;
             --color-red-glow: rgba(255, 65, 108, 0.15);
-            --color-border: #1F2E4A;
+            
+            /* General Styles */
             --font-family-title: 'Outfit', 'Inter', sans-serif;
             --font-family-body: 'Inter', sans-serif;
-            --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.5);
+            --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.35);
             --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -49,6 +51,7 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* --- Sidebar Navigation --- */
@@ -62,13 +65,14 @@
             position: fixed;
             height: 100vh;
             z-index: 10;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 45px;
+            margin-bottom: 40px;
         }
 
         .logo-icon {
@@ -82,8 +86,8 @@
             font-family: var(--font-family-title);
             font-weight: 800;
             font-size: 22px;
-            color: var(--bg-primary);
-            box-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+            color: #080D1A;
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.3);
         }
 
         .logo-text h1 {
@@ -92,6 +96,7 @@
             font-weight: 700;
             letter-spacing: 0.5px;
             line-height: 1.1;
+            color: var(--color-text-white);
         }
 
         .logo-text span {
@@ -108,7 +113,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            flex-grow: 1;
+            margin-bottom: 30px;
         }
 
         .nav-item {
@@ -136,7 +141,7 @@
         }
 
         .nav-item:hover, .nav-item.active {
-            color: #FFFFFF;
+            color: var(--color-text-white);
             background-color: var(--bg-tertiary);
         }
 
@@ -146,10 +151,56 @@
             color: var(--color-gold);
         }
 
-        .sidebar-footer {
+        /* --- Theme Picker System --- */
+        .theme-picker-section {
             margin-top: auto;
             border-top: 1px solid var(--color-border);
             padding-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .theme-picker-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-grey);
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-bubble {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .theme-bubble:hover {
+            transform: scale(1.15);
+        }
+
+        .theme-bubble.active {
+            border-color: #FFFFFF;
+            box-shadow: 0 0 10px var(--color-gold);
+        }
+
+        #theme-navy { background-color: #1B365D; }
+        #theme-slate { background-color: #38BDF8; }
+        #theme-emerald { background-color: #10B981; }
+        #theme-light { background: linear-gradient(135deg, #FFFFFF, #E2E8F0); border: 1px solid #CBD5E1; }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--color-border);
+            padding-top: 15px;
             font-size: 11px;
             color: var(--color-grey);
         }
@@ -164,6 +215,7 @@
             flex-grow: 1;
             padding: 40px;
             max-width: calc(100% - 260px);
+            transition: background-color 0.3s ease;
         }
 
         header {
@@ -177,7 +229,7 @@
             font-family: var(--font-family-title);
             font-size: 28px;
             font-weight: 700;
-            color: #FFFFFF;
+            color: var(--color-text-white);
         }
 
         .header-title p {
@@ -187,7 +239,7 @@
         }
 
         .header-tag {
-            background-color: rgba(255, 183, 3, 0.08);
+            background-color: var(--color-gold-glow);
             border: 1px solid rgba(255, 183, 3, 0.2);
             padding: 8px 16px;
             border-radius: 20px;
@@ -197,6 +249,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: var(--transition-smooth);
         }
 
         .tag-dot {
@@ -206,11 +259,12 @@
             border-radius: 50%;
             display: inline-block;
             box-shadow: 0 0 10px var(--color-gold);
+            transition: var(--transition-smooth);
         }
 
         /* --- Banner Card (Mockup Explanation) --- */
         .banner-card {
-            background: linear-gradient(135deg, var(--bg-secondary), #131E33);
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
             border: 1px solid var(--color-border);
             border-radius: 14px;
             padding: 22px 28px;
@@ -219,12 +273,13 @@
             align-items: center;
             gap: 20px;
             box-shadow: var(--shadow-card);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .banner-icon {
             width: 50px;
             height: 50px;
-            background-color: rgba(255, 183, 3, 0.1);
+            background-color: var(--color-gold-glow);
             border: 1px solid var(--color-gold);
             border-radius: 50%;
             display: flex;
@@ -232,6 +287,7 @@
             justify-content: center;
             color: var(--color-gold);
             flex-shrink: 0;
+            transition: var(--transition-smooth);
         }
 
         .banner-icon svg {
@@ -244,7 +300,7 @@
             font-family: var(--font-family-title);
             font-size: 16px;
             font-weight: 600;
-            color: #FFFFFF;
+            color: var(--color-text-white);
             margin-bottom: 2px;
         }
 
@@ -276,8 +332,8 @@
 
         .kpi-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(255, 183, 3, 0.4);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            border-color: var(--color-gold);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
         .kpi-info {
@@ -298,7 +354,7 @@
             font-family: var(--font-family-title);
             font-size: 26px;
             font-weight: 700;
-            color: #FFFFFF;
+            color: var(--color-text-white);
         }
 
         .kpi-trend {
@@ -359,11 +415,12 @@
             border-radius: 14px;
             padding: 28px;
             box-shadow: var(--shadow-card);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .card-header {
             margin-bottom: 22px;
-            border-bottom: 1px solid rgba(31, 46, 74, 0.4);
+            border-bottom: 1px solid var(--color-border);
             padding-bottom: 15px;
         }
 
@@ -371,7 +428,7 @@
             font-family: var(--font-family-title);
             font-size: 20px;
             font-weight: 600;
-            color: #FFFFFF;
+            color: var(--color-text-white);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -447,7 +504,8 @@
             padding: 3px 10px;
             border-radius: 6px;
             border: 1px solid rgba(255, 183, 3, 0.2);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+            transition: var(--transition-smooth);
         }
 
         .range-slider {
@@ -458,6 +516,7 @@
             outline: none;
             -webkit-appearance: none;
             appearance: none;
+            transition: background-color 0.3s ease;
         }
 
         .range-slider::-webkit-slider-thumb {
@@ -514,7 +573,8 @@
             text-align: center;
             height: 100%;
             justify-content: center;
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .risk-gauge-container {
@@ -522,7 +582,7 @@
             width: 200px;
             height: 200px;
             margin-bottom: 25px;
-            filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
         }
 
         .gauge-svg {
@@ -533,6 +593,7 @@
             fill: none;
             stroke: var(--bg-secondary);
             stroke-width: 14px;
+            transition: stroke 0.3s ease;
         }
 
         .gauge-fill {
@@ -571,7 +632,7 @@
             font-family: var(--font-family-title);
             font-size: 38px;
             font-weight: 800;
-            color: #FFFFFF;
+            color: var(--color-text-white);
             line-height: 1;
         }
 
@@ -592,7 +653,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 22px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -623,11 +684,12 @@
             padding: 18px;
             width: 100%;
             font-size: 13.5px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .recommendation-title {
             font-weight: 700;
-            color: #FFFFFF;
+            color: var(--color-text-white);
             margin-bottom: 6px;
             display: flex;
             align-items: center;
@@ -648,6 +710,7 @@
             border-radius: 12px;
             border: 1px solid var(--color-border);
             margin-bottom: 30px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .metrics-comparison {
@@ -669,7 +732,8 @@
             border-radius: 12px;
             padding: 22px;
             text-align: center;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .metric-comp-num {
@@ -686,6 +750,7 @@
             border-radius: 4px;
             margin-top: 12px;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
         .savings-progress-fill {
@@ -704,6 +769,7 @@
             margin-bottom: 30px;
             font-size: 13.5px;
             line-height: 1.6;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .callout-card h4 {
@@ -735,6 +801,7 @@
             border-radius: 14px;
             padding: 25px;
             box-shadow: var(--shadow-card);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
     </style>
 </head>
@@ -763,6 +830,17 @@
                 <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
                 Portfolio Analytics
             </button>
+        </div>
+
+        <!-- Theme Picker UI -->
+        <div class="theme-picker-section">
+            <span class="theme-picker-label">Portal Theme</span>
+            <div class="theme-options">
+                <div class="theme-bubble active" id="theme-navy" onclick="setTheme('navy')" title="Midnight Navy"></div>
+                <div class="theme-bubble" id="theme-slate" onclick="setTheme('slate')" title="Slate Cyan"></div>
+                <div class="theme-bubble" id="theme-emerald" onclick="setTheme('emerald')" title="Emerald Forest"></div>
+                <div class="theme-bubble" id="theme-light" onclick="setTheme('light')" title="Alabaster Light"></div>
+            </div>
         </div>
 
         <div class="sidebar-footer">
@@ -959,7 +1037,7 @@
                         <div class="recommendation-box">
                             <div class="recommendation-title">
                                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                                Proactive Strategy recommendation:
+                                Proactive Strategy Recommendation:
                             </div>
                             <p style="color: var(--color-grey); line-height: 1.5; margin-top: 5px;" id="recommendation-text">Account standing is solid. Continue normal limits and standard pricing.</p>
                         </div>
@@ -982,7 +1060,7 @@
 
                 <div class="threshold-slider-container">
                     <div class="input-label-row">
-                        <label class="input-label" style="font-weight: 700; color: #FFFFFF;" for="input-thresh">
+                        <label class="input-label" style="font-weight: 700; color: var(--color-text-white);" for="input-thresh">
                             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                             Predictive Decision Cutoff Probability
                         </label>
@@ -999,7 +1077,7 @@
                     </div>
                     <div class="metric-comparison-box">
                         <div class="kpi-label">Model Precision</div>
-                        <div class="metric-comp-num" id="precision-output" style="color: #FFFFFF;">66.0%</div>
+                        <div class="metric-comp-num" id="precision-output" style="color: var(--color-text-white);">66.0%</div>
                         <p style="font-size: 11px; color: var(--color-grey); margin-top: 4px;" id="precision-desc">Low false alerts, low friction.</p>
                     </div>
                     <div class="metric-comparison-box">
@@ -1095,6 +1173,88 @@
             }
         }
 
+        // --- THEME PICKER LOGIC ---
+        function setTheme(themeName) {
+            // Remove active class from bubbles
+            document.querySelectorAll('.theme-bubble').forEach(b => b.classList.remove('active'));
+            document.getElementById('theme-' + themeName).classList.add('active');
+
+            const root = document.documentElement;
+
+            let textColor, gridColor;
+
+            if (themeName === 'navy') {
+                root.style.setProperty('--bg-primary', '#080D1A');
+                root.style.setProperty('--bg-secondary', '#0E1626');
+                root.style.setProperty('--bg-tertiary', '#152238');
+                root.style.setProperty('--color-border', '#1F2E4A');
+                root.style.setProperty('--color-text-white', '#F0F4F8');
+                root.style.setProperty('--color-grey', '#8E9AAF');
+                root.style.setProperty('--color-gold', '#FFB703');
+                root.style.setProperty('--color-gold-glow', 'rgba(255, 183, 3, 0.15)');
+                root.style.setProperty('--shadow-card', '0 12px 40px rgba(0, 0, 0, 0.35)');
+                textColor = '#8E9AAF';
+                gridColor = 'rgba(31, 46, 74, 0.4)';
+            } 
+            else if (themeName === 'slate') {
+                root.style.setProperty('--bg-primary', '#0F172A');
+                root.style.setProperty('--bg-secondary', '#1E293B');
+                root.style.setProperty('--bg-tertiary', '#334155');
+                root.style.setProperty('--color-border', '#475569');
+                root.style.setProperty('--color-text-white', '#F8FAFC');
+                root.style.setProperty('--color-grey', '#94A3B8');
+                root.style.setProperty('--color-gold', '#38BDF8');
+                root.style.setProperty('--color-gold-glow', 'rgba(56, 189, 248, 0.15)');
+                root.style.setProperty('--shadow-card', '0 12px 40px rgba(0, 0, 0, 0.4)');
+                textColor = '#94A3B8';
+                gridColor = 'rgba(71, 85, 105, 0.4)';
+            } 
+            else if (themeName === 'emerald') {
+                root.style.setProperty('--bg-primary', '#06100E');
+                root.style.setProperty('--bg-secondary', '#0E1A17');
+                root.style.setProperty('--bg-tertiary', '#172C27');
+                root.style.setProperty('--color-border', '#24473E');
+                root.style.setProperty('--color-text-white', '#E6F4F1');
+                root.style.setProperty('--color-grey', '#8AA8A1');
+                root.style.setProperty('--color-gold', '#10B981');
+                root.style.setProperty('--color-gold-glow', 'rgba(16, 185, 129, 0.15)');
+                root.style.setProperty('--shadow-card', '0 12px 40px rgba(0, 0, 0, 0.5)');
+                textColor = '#8AA8A1';
+                gridColor = 'rgba(36, 71, 62, 0.4)';
+            } 
+            else if (themeName === 'light') {
+                root.style.setProperty('--bg-primary', '#F1F5F9');
+                root.style.setProperty('--bg-secondary', '#FFFFFF');
+                root.style.setProperty('--bg-tertiary', '#E2E8F0');
+                root.style.setProperty('--color-border', '#CBD5E1');
+                root.style.setProperty('--color-text-white', '#0F172A');
+                root.style.setProperty('--color-grey', '#64748B');
+                root.style.setProperty('--color-gold', '#1B365D');
+                root.style.setProperty('--color-gold-glow', 'rgba(27, 54, 93, 0.1)');
+                root.style.setProperty('--shadow-card', '0 8px 30px rgba(100, 116, 139, 0.15)');
+                textColor = '#64748B';
+                gridColor = 'rgba(203, 213, 225, 0.8)';
+            }
+
+            // Update Chart.js ticks and gridlines colors dynamically
+            if (window.charts) {
+                window.charts.forEach(chart => {
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.options.scales.y.ticks.color = textColor;
+                    if (chart.options.scales.y.grid) {
+                        chart.options.scales.y.grid.color = gridColor;
+                    }
+                    if (chart.options.plugins.legend) {
+                        chart.options.plugins.legend.labels.color = textColor;
+                    }
+                    chart.update();
+                });
+            }
+
+            // Re-evaluate risk colors based on the new theme's gold variable
+            calculateRisk();
+        }
+
         // --- 1. RISK CALCULATOR LOGIC ---
         function calculateRisk() {
             // Get inputs
@@ -1153,7 +1313,7 @@
                 statusBadge.innerText = 'Moderate Risk';
                 statusBadge.classList.add('badge-med');
                 gaugeArc.style.stroke = 'var(--color-gold)';
-                glowEffect.style.boxShadow = 'inset 0 0 30px rgba(255, 183, 3, 0.1)';
+                glowEffect.style.boxShadow = 'inset 0 0 30px var(--color-gold-glow)';
                 recText.innerHTML = "<strong>Trigger Proactive Outreach:</strong> Recommend initiating automated payment reminders (SMS/Email) upon first late payment and review for minor credit limit adjustments.";
             } else {
                 statusBadge.innerText = 'High Risk';
@@ -1224,18 +1384,16 @@
 
         // --- 3. CHARTS INITIALIZATION (CHART.JS) ---
         window.onload = function() {
+            // Set charts array on window for reference
+            window.charts = [];
+
             // Initialize risk calculator
             calculateRisk();
             adjustThreshold(50);
 
             // Chart 1: Late Payments vs. Delinquency
             const ctx1 = document.getElementById('chart-late-payments').getContext('2d');
-            // Gradient fill
-            const grad1 = ctx1.createLinearGradient(0, 0, 0, 300);
-            grad1.addColorStop(0, '#FFB703');
-            grad1.addColorStop(1, 'rgba(27, 54, 93, 0.2)');
-
-            new Chart(ctx1, {
+            const c1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: ['0 Late', '1 Late', '2 Late', '3+ Late'],
@@ -1272,14 +1430,11 @@
                     }
                 }
             });
+            window.charts.push(c1);
 
             // Chart 2: Credit Utilization vs. Default
             const ctx2 = document.getElementById('chart-utilization').getContext('2d');
-            const grad2 = ctx2.createLinearGradient(0, 0, 0, 300);
-            grad2.addColorStop(0, '#FFB703');
-            grad2.addColorStop(1, '#152238');
-
-            new Chart(ctx2, {
+            const c2 = new Chart(ctx2, {
                 type: 'bar',
                 data: {
                     labels: ['0-30%', '31-50%', '51-70%', '71-90%', '91%+'],
@@ -1315,6 +1470,7 @@
                     }
                 }
             });
+            window.charts.push(c2);
 
             // Chart 3: FICO Credit Score Distributions
             const ctx3 = document.getElementById('chart-fico-dist').getContext('2d');
@@ -1327,7 +1483,7 @@
             lineGrad2.addColorStop(0, 'rgba(255, 183, 3, 0.25)');
             lineGrad2.addColorStop(1, 'rgba(255, 183, 3, 0.0)');
 
-            new Chart(ctx3, {
+            const c3 = new Chart(ctx3, {
                 type: 'line',
                 data: {
                     labels: ['300-400', '401-500', '501-550', '551-600', '601-650', '651-700', '701-750', '751-800', '801-850'],
@@ -1376,6 +1532,10 @@
                     }
                 }
             });
+            window.charts.push(c3);
+
+            // Set default startup theme to Emerald Forest (Option 3)
+            setTheme('emerald');
         }
     </script>
 </body>
